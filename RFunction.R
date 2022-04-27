@@ -73,9 +73,9 @@ rFunction <- function(data)
     
     zeit <- as.POSIXct(crss_detail$timestamp_near,tz="UTC") + c(1:len)
     o <- order(zeit)
-    roadcross <- move(x=crss_detail$location.long[o],y=crss_detail$location.lat[o],time=zeit[o], data = crss_detail[o,], proj=projection(data), animal <- "road_crossing")
+    roadcross <- move(x=crss_detail$location.long[o],y=crss_detail$location.lat[o],time=zeit[o], data = crss_detail[o,], proj=projection(data))
     
-    result <- moveStack(data,roadcross,forceTz="UTC")
+    result <- moveStack(data,"road_crossing"=roadcross,forceTz="UTC")
   }
   
   return(result)
