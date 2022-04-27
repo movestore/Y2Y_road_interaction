@@ -5,7 +5,6 @@ library('ggplot2')
 library('adehabitatLT')
 library('geosphere')
 
-
 rFunction <- function(data)
 {
   Sys.setenv(tz="UTC")
@@ -14,22 +13,23 @@ rFunction <- function(data)
   
   data_ltraj <-as(data,"ltraj")
   data_spdf <- ltraj2sldf(data_ltraj,byid=TRUE)
-
+  
   data_sf <- st_as_sf(data_spdf)
   st_crs(data_sf) <- st_crs(roads)
   
   bb <- st_bbox(data_sf)
   roads_crop <- st_crop(roads,bb)
   
-  crss <- st_intersection(data_sf,roads_crop) 
+  crss <- st_intersection(roads_crop,data_sf) 
   dimcrss <- dim(crss)
+  crss <- st_cast(crss,to="MULTIPOINT") #change object type,else error in merge() below
   
   if (dimcrss[1]==0) 
-    {
+  {
     logger.info("There is no intersection of your track(s) with any road in the Y2Y region. Returning input data set.")
     result <- data
-    } else
-    {
+  } else
+  {
     map <- ggplot(roads_crop) + 
       geom_sf(aes(col=GP_RTP),size=2) +
       geom_sf(data=data_sf,colour="brown",aes()) +
@@ -54,8 +54,10 @@ rFunction <- function(data)
     long_near <- lat_near <- numeric(len)
     for (i in seq(along=crss_detail[,1]))
     {
+      #print(i)
       datai <- data.split[[which(names(data.split)==crss_detail$animalID[i])]]
-      dists2crssi <- distVincentyEllipsoid(coordinates(datai),crss_detail[i,c("location.long","location.lat")])
+      #dists2crssi <- distVincentyEllipsoid(coordinates(datai),crss_detail[i,c("location.long","location.lat")]) #takes too long
+      dists2crssi <- distGeo(coordinates(datai),crss_detail[i,c("location.long","location.lat")])
       timestamp_near[i] <- as.character(timestamps(datai)[min(which(dists2crssi==min(dists2crssi)))])
       loc_neari <- coordinates(datai)[min(which(dists2crssi==min(dists2crssi))),]
       long_near[i] <- loc_neari[1]
@@ -79,13 +81,3 @@ rFunction <- function(data)
   return(result)
 }
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
