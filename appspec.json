@@ -1,5 +1,25 @@
 {
   "settings": [
+      {
+      "id": "colour_name",
+      "name": "Column name for street colouring",
+      "description": "Insert the column name of the input roads data set that you want to use for colouring the roads in the map of intersections.",
+      "defaultValue": "GP_RTP",
+      "type": "STRING"
+    },
+	{
+      "id": "road_files",
+      "name": "Road files",
+      "description": "You can upload local files for running the road intersection analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! The App requires the following files, named exactly as given: 1. `roads.cpg`, 2. `roads.dbf`, 3. `roads.prj`, 4. `roads.shp`, 5. `roads.shx`. Note that fallback road files are provided, but they span only the Yukon to Yellowstone Region (Y2Y).",
+      "type": "LOCAL_FILE"
+    }
+  ],
+  "providedAppFiles": [
+    {
+
+      "settingId": "road_files",
+      "from": "provided-app-files/road_files/"
+    }
   ],
   "dependencies": {
     "R": [
