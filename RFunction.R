@@ -41,14 +41,14 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
       {
         logger.info("Your road colour name does not exist or has been chosen to be NULL. Therefore all roads have the same colour, not indicating road type or any other property.")
         
-        map0 <- ggplot(roads_crop) + 
+        map <- ggplot(roads_crop) + 
           geom_sf(colour=4,size=2) +
           geom_sf(data=data_sf,colour="brown",aes()) +
           geom_sf(data=crss,aes(),colour="orange") +
           guides(colour = guide_colourbar(title = "Road property"))
       } else
       {
-        map0 <- ggplot(roads_crop) + 
+        map <- ggplot(roads_crop) + 
           geom_sf(aes_string(col=colour_name),size=2) +
           geom_sf(data=data_sf,colour="brown",aes()) +
           geom_sf(data=crss,aes(),colour="orange") +
