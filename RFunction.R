@@ -68,7 +68,7 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
     for (i in seq(along=crss_detail[,1]))
     {
       #print(i)
-      datai <- data.split[[which(names(data.split)==crss_detail$animalID[i])]]
+      datai <- data.split[[which(names(data.split)==crss_detail$trackId[i])]]
       #dists2crssi <- distVincentyEllipsoid(coordinates(datai),crss_detail[i,c("location.long","location.lat")]) #takes too long
       dists2crssi <- distGeo(coordinates(datai),crss_detail[i,c("location.long","location.lat")])
       timestamp_near[i] <- as.character(timestamps(datai)[min(which(dists2crssi==min(dists2crssi)))])
