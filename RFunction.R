@@ -52,7 +52,7 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
     crss_df <- data.frame("roadID"=1:dimcrss[1],data.frame(crss)[,1:(dimcrss[2]-1)])
     
     crss_detail <- merge(crss_df,st_coordinates(crss),by.x="roadID",by.y="L1")
-    names(crss_detail)[names(crss_detail)=="id"] <- "animalID"
+    names(crss_detail)[names(crss_detail)=="id"] <- "trackId"
     names(crss_detail)[names(crss_detail)=="X"] <- "location.long"
     names(crss_detail)[names(crss_detail)=="Y"] <- "location.lat"
     
@@ -75,8 +75,17 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
       loc_neari <- coordinates(datai)[min(which(dists2crssi==min(dists2crssi))),]
       long_near[i] <- loc_neari[1]
       lat_near[i] <- loc_neari[2]
-      species[i] <- idData(datai)$taxon_canonical_name
       sensor[i] <- as.character(sensor(datai))[1]
+      
+      iddata <- idData(datai)
+      names(iddata) <- make.names(names(iddata),allow_=FALSE)
+      if (any(names(iddata)=="individual.taxon.canonical.name")) {
+        species[i] <- iddata$individual.taxon.canonical.name[1]
+      } else if (any(names(iddata)=="taxon.canonical.name")) {
+        species[i] <- iddata$taxon.canonical.name[1]
+      } else {
+        species[i] <- NA
+      }
     }
     
     crss_detail <- data.frame(crss_detail,timestamp_near,long_near,lat_near,species,sensor)
