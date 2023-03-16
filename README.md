@@ -1,4 +1,4 @@
-# Y2Y Road Intersection
+# Road Intersections (Y2Y)
 MoveApps
 
 Github repository: *github.com/movestore/Y2Y_road_interaction*
@@ -68,12 +68,12 @@ moveStack in Movebank format
  
 `road_crossings_map.png`: Map of roads (blue) of the tracking area, with tracks (dark red) and intersections as points (orange).
 
-### Parameters 
-`road_names`: Variable of the street data set indicating colouring of roads in output map. Defaults to "GP_RTP" which is road type in the fallback GRIP roads data set.
+### Settings
+**Column name for street colouring (`colour_name`):** Variable of the street data set indicating colouring of roads in output map. Defaults to "GP_RTP" which is road type in the fallback GRIP roads data set.
 
-`road_files`: Metadata allowing the local upload of a roads shapefile in WGS 84 that overlaps with the handled tracking data set.
+**Road files (`road_files`):** Metadata allowing the local upload of a roads shapefile in WGS 84 that overlaps with the handled tracking data set.
 
 ### Null or error handling:
-**Parameter `road_names`:** If the selected column name of the road data set does not exist, all roads are coloured in the same colour `blue`. A warning is given.
+**Setting `road_names`:** If the selected column name of the road data set does not exist, all roads are coloured in the same colour `blue`. A warning is given.
 
 **Data:** The full input data set with an additional (fictive) individual called "road_crossing" is returned for further use in a next App.
