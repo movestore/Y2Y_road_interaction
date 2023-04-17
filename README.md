@@ -16,7 +16,7 @@ The intersections and related properties are summarized in a .csv file. In addit
 Calculations assume that the animal travels at a consistent speed in a straight line between consecutive locations. Note that the accuracy of the results will depend on the accuracy and resolution of the input tracking and roads datasets. You can use the [Track Summary Statistics App](https://www.moveapps.org/apps/browser/8ca03c5a-d61a-466d-860b-11beb6bf6404) to obtain a summary of fix rates and sensor types within the tracking data. To assess possible missing roads or other infrastructure, you can view the results with basemaps showing satellite imagery and/or physical infrastructure, such as the [Interactive Map (leaflet) App](https://www.moveapps.org/apps/browser/163c11bf-bd2c-4984-9fa6-96acdf5ac8b3). 
 
 #### Intersection attributes 
-The following attributes describing road intesections are added to the output dataset and summarized in the output file road_crossings_table.csv. See details in Table `GRIP4_AttributeDescription.xlsx` at [https://zenodo.org/record/6420961#.Ymft39PP2Um](https://zenodo.org/record/6420961#.Ymft39PP2Um).
+The following attributes describing road intesections are added to the output dataset and summarized in the output file road_crossings_table.csv. See details in Table `GRIP4_AttributeDescription.xlsx` at [https://zenodo.org/record/6420961#.Ymft39PP2Um](https://zenodo.org/record/6420961#.Ymft39PP2Um) and the related [publication](https://doi.org/10.1088/1748-9326/aabd42).
 
 `roadID`: random ID for road
 
@@ -38,7 +38,7 @@ The following attributes describing road intesections are added to the output da
 
 `GP_RSY`: year the data source describes the road
 
-`Shape_Leng`: total length of the road
+`Shape_Leng`: total length of the road in the grid cell (unit: km; see related [paper]( https://doi.org/10.1088/1748-9326/aabd42))
 
 `gp_gripreg`: aggregated region for the GLOBIO website downloads
 
@@ -46,11 +46,11 @@ The following attributes describing road intesections are added to the output da
 
 `location.lat`: latitude of intersection location
 
-`timestamp_near`: timestamp of closest location of the same animal to the intersection (with random seconds added for uniqueness of timestamp)
+`timestamp.near`: timestamp of closest location of the same animal to the intersection (with random seconds added for uniqueness of timestamp)
 
-`long_near`: longitude of closest location of the same animal to the intersection
+`long.near`: longitude of closest location of the same animal to the intersection
 
-`lat_near`: latitude of closest location of the same animal to the intersection
+`lat.near`: latitude of closest location of the same animal to the intersection
 
 `species`: species of animal of the intersection
 
@@ -73,6 +73,6 @@ moveStack in Movebank format
 **Road files (`road_files`):** Metadata allowing the local upload of a roads shapefile in WGS 84 that overlaps with the handled tracking data set.
 
 ### Null or error handling:
-**Setting `road_names`:** If the selected column name of the road data set does not exist, all roads are coloured in the same colour `blue`. A warning is given.
+**Setting `colour_name`:** If the selected column name of the road data set does not exist, all roads are coloured in the same colour `blue`. A warning is given.
 
 **Data:** The full input data set with an additional (fictive) individual called "road_crossing" is returned for further use in a next App.

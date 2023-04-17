@@ -10,7 +10,7 @@
 	{
       "id": "road_files",
       "name": "Road files",
-      "description": "You can upload local files for running the road intersection analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! The App requires the following files, named exactly as given: 1. `roads.cpg`, 2. `roads.dbf`, 3. `roads.prj`, 4. `roads.shp`, 5. `roads.shx`. Note that fallback road files are provided, but they span only the Yukon to Yellowstone Region (Y2Y).",
+      "description": "You can upload local files for running the road intersection analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! There is a current size limit of 1 GB for the file set. The App requires the following files, named exactly as given: 1. `roads.cpg`, 2. `roads.dbf`, 3. `roads.prj`, 4. `roads.shp`, 5. `roads.shx`. Note that fallback road files are provided, but they span only the Yukon to Yellowstone Region (Y2Y).",
       "type": "LOCAL_FILE"
     }
   ],
