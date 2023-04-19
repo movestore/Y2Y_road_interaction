@@ -19,16 +19,23 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
   #roads <- st_read("GRIP_roads_NASAY2Y/GRIP_roads_NASAY2Y.shp")
   roads <- st_read(paste0(getAppFilePath("road_files"),"roads.shp"))
   
-  data_ltraj <- as(data,"ltraj")
-  data_spdf <- ltraj2sldf(data_ltraj,byid=TRUE)
+  data_lsl <- lapply(move::split(data), function(x){Lines(list(Line(coordinates(x))),ID=namesIndiv(x))})
+  data_sldf <- SpatialLinesDataFrame(SpatialLines(data_lsl,proj4string = data@proj4string), data=data.frame(idData(data),"trackId"=unique(trackId(data))) ,match.ID = F)
   
-  data_sf <- st_as_sf(data_spdf)
-  st_crs(data_sf) <- st_crs(roads)
+  #data_ltraj <- as(data,"ltraj") #ltraj trows away projection info, thus dont use it!
+  #data_spdf <- ltraj2sldf(data_ltraj,byid=TRUE)
+  
+  data_sf <- st_as_sf(data_sldf)
+  #data_sf <- st_as_sf(data)
+  #st_crs(data_sf) <- st_crs(roads)
+  roads <- st_transform(roads,st_crs(data_sf))
   
   bb <- st_bbox(data_sf)
   roads_crop <- st_crop(roads,bb)
   
-  crss <- st_intersection(roads_crop,data_sf) #for each road one feature with crossings
+  logger.info("crss running")
+  crss <- st_intersection(roads_crop,data_sf) #for each road section one feature with crossings
+  logger.info("crss finished")
   dimcrss <- dim(crss)
   crss <- st_cast(crss,to="MULTIPOINT") #change object type,else error in merge() below
   
@@ -62,12 +69,10 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
         theme(plot.title = element_text(color="orange"))
     }
     
-    crss_t <- st_transform(crss, crs(data)) #backtransform to crs of data
+    crss_df <- data.frame("roadID"=1:dimcrss[1],data.frame(crss)[,1:(dimcrss[2]-1)])
     
-    crss_df <- data.frame("roadID"=1:dimcrss[1],data.frame(crss_t)[,1:(dimcrss[2]-1)])
-    
-    crss_detail <- merge(crss_df,st_coordinates(crss_t),by.x="roadID",by.y="L1")
-    names(crss_detail)[names(crss_detail)=="id"] <- "trackId"
+    crss_detail <- merge(crss_df,st_coordinates(crss),by.x="roadID",by.y="L1")
+    names(crss_detail)[names(crss_detail)=="animalName"] <- "trackId"
     names(crss_detail)[names(crss_detail)=="X"] <- "location.long"
     names(crss_detail)[names(crss_detail)=="Y"] <- "location.lat"
     
