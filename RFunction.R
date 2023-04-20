@@ -2,7 +2,7 @@ library('move')
 library('sp')
 library('sf')
 library('ggplot2')
-library('adehabitatLT')
+#library('adehabitatLT')
 library('geosphere')
 
 # plans for changes: 

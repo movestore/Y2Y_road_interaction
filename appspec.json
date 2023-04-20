@@ -36,9 +36,6 @@
         "name": "ggplot2"
       },
 	  	  {
-        "name": "adehabitatLT"
-      },
-	  	  {
         "name": "geosphere"
       }
     ]
