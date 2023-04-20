@@ -49,24 +49,33 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
     {
       logger.info("Your road colour name does not exist or has been chosen to be NULL. Therefore all roads have the same colour, not indicating road type or any other property.")
       
-      map <- ggplot(roads_crop) + 
-        geom_sf(colour=4,size=2) +
-        geom_sf(data=data_sf,colour="black",aes()) +
-        geom_sf(data=crss,aes(),colour="orange") +
-        guides(colour = guide_legend(title = "Road property")) +
+      map <- ggplot() + 
+        geom_sf(data=data_sf,colour="black",aes(alpha= "Tracks")) +
+        geom_sf(data=roads_crop,aes(alpha= "Roads"), colour="red",size=2) +
+        geom_sf(data=crss,aes(alpha="Road intersections"),colour="orange") +
         ggtitle("Road intersections") +
-        theme(plot.title = element_text(color="orange"))
+        scale_alpha_manual(name = NULL, # here a "title" could be added
+                           values = c(1, 1, 1), # setting all to 1 as no transparency is wanted
+                           breaks = c("Roads","Tracks", "Road intersections"),
+                           guide = guide_legend(override.aes = list(linetype = c(1,1, 0),
+                                                                    shape = c(NA,NA, 16),
+                                                                    color = c("red","black", "orange") ))) 
     } else
     {
       eval(parse(text=paste0("class(roads_crop$",colour_name,") <- 'character'")))
-      
+
       map <- ggplot() + 
-        geom_sf(data=roads_crop,aes_string(col=colour_name),size=2) +
-        geom_sf(data=data_sf,colour="black",aes()) +
-        geom_sf(data=crss,aes(),colour="orange") +
-        guides(colour = guide_legend(title = "Road property")) +
+        geom_sf(data=data_sf,colour="black",aes(alpha= "Tracks")) +
+        geom_sf(data=roads_crop,aes(col=as.factor(.data[[colour_name]])),size=2) + # aes_string is deprecated
+        geom_sf(data=crss,aes(alpha="Road intersections"),colour="orange") +
+        guides(colour = guide_legend(title = "Road type")) +
         ggtitle("Road intersections") +
-        theme(plot.title = element_text(color="orange"))
+        scale_alpha_manual(name = NULL, # here a "title" could be added
+                           values = c(1, 1), # setting all to 1 as no transparency is wanted
+                           breaks = c("Tracks", "Road intersections"),
+                           guide = guide_legend(override.aes = list(linetype = c(1, 0),
+                                                                    shape = c(NA, 16),
+                                                                    color = c("black", "orange") ))) 
     }
     
     crss_df <- data.frame("roadID"=1:dimcrss[1],data.frame(crss)[,1:(dimcrss[2]-1)])
