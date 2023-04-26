@@ -94,6 +94,11 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
     
     timestamp.near <- animalID <- species <- sensor <- character(len)
     long.near <- lat.near <- numeric(len)
+    
+    #make names to allow for numeric animal names
+    names(data.split) <- make.names(names(data.split),allow_=FALSE)
+    crss_detail$trackId <- make.names(crss_detail$trackId,allow_=FALSE)
+    
     for (i in seq(along=crss_detail[,1])) #for each crossing point
     {
       #print(i)

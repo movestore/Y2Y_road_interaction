@@ -2,7 +2,7 @@
 ## "input1_pigeons.rds", "input2_geese.rds", "input3_stork.rds", "input4_goat.rds"  
 ## for own data: file saved as a .rds containing a object of class MoveStack
 #inputFileName = "./data/raw/input2_geese.rds" 
-inputFileName = "Wolves_in_western_Canada__Barrier_Interaction_Behaviour_Analysis__2023-04-17_07-53-24.rds" 
+inputFileName = "Elk_at_Banff_National_Park__Barrier_Interaction_Behaviour_Analysis__2023-04-26_14-47-44.rds" 
 ## optionally change the output file name
 dir.create("./data/output/")
 outputFileName = "./data/output/output.rds" 
