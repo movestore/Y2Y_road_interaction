@@ -81,7 +81,7 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
     crss_df <- data.frame("roadID"=1:dimcrss[1],data.frame(crss)[,1:(dimcrss[2]-1)])
     
     crss_detail <- merge(crss_df,st_coordinates(crss),by.x="roadID",by.y="L1")
-    names(crss_detail)[names(crss_detail)=="animalName"] <- "trackId"
+    if (!any(names(crss_detail)=="trackId")) names(crss_detail)[names(crss_detail)=="animalName"] <- "trackId" #if there is no trackId  attribute, make the animalName be it
     names(crss_detail)[names(crss_detail)=="X"] <- "location.long"
     names(crss_detail)[names(crss_detail)=="Y"] <- "location.lat"
     
