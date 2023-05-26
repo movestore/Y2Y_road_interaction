@@ -20,11 +20,31 @@ Calculations assume that the animal travels at a consistent speed in a straight 
 The GRIP documentation explains that the dataset is for 'global environmental and biodiversity modelling projects. The dataset is not suitable for navigation.' 
 
 #### Intersection attributes 
-The following attributes describing road intesections are added to the output dataset and summarized in the output file road_crossings_table.csv. See details in Table `GRIP4_AttributeDescription.xlsx` at [https://zenodo.org/record/6420961#.Ymft39PP2Um](https://zenodo.org/record/6420961#.Ymft39PP2Um) and the related [publication](https://doi.org/10.1088/1748-9326/aabd42).
+The following attributes describing road intesections are added to the output dataset and summarized in the output file road_crossings_table.csv.
+
+One group of attributes comes from your tracking data (those that are included in the output .rds file and passed on to subsequent Apps).
+
+A second group of attributes is specific to the road intersection analysis regardless of input data, including
+
+`location.long`: longitude of intersection location
+
+`location.lat`: latitude of intersection location
+
+`timestamp.near`: timestamp of closest location of the same animal to the intersection (with random seconds added for uniqueness of timestamp)
+
+`long.near`: longitude of closest location of the same animal to the intersection
+
+`lat.near`: latitude of closest location of the same animal to the intersection
+
+`species`: species of animal of the intersection
+
+`sensor`: sensor used to collect locations of animal of the intersection
 
 `roadID`: random ID for road
 
 `animalID`: individual.local.identifier of the animal crossing the road
+
+A third group of attributes comes from the roads data source used in the analysis. If you use the default GRIP dataset, this will include the attributes listed below. See details in Table `GRIP4_AttributeDescription.xlsx` at [https://zenodo.org/record/6420961#.Ymft39PP2Um](https://zenodo.org/record/6420961#.Ymft39PP2Um) and the related [publication](https://doi.org/10.1088/1748-9326/aabd42).
 
 `GP_RTP`: road type (1 = highways, 2 = primary roads, 3 = secondary roads, 4 = tertiary roads, 5 = local roads, 0 = unspecified)
 
@@ -45,20 +65,6 @@ The following attributes describing road intesections are added to the output da
 `Shape_Leng`: total length of the road in the grid cell (unit: km; see related [paper]( https://doi.org/10.1088/1748-9326/aabd42))
 
 `gp_gripreg`: aggregated region for the GLOBIO website downloads
-
-`location.long`: longitude of intersection location
-
-`location.lat`: latitude of intersection location
-
-`timestamp.near`: timestamp of closest location of the same animal to the intersection (with random seconds added for uniqueness of timestamp)
-
-`long.near`: longitude of closest location of the same animal to the intersection
-
-`lat.near`: latitude of closest location of the same animal to the intersection
-
-`species`: species of animal of the intersection
-
-`sensor`: sensor used to collect locations of animal of the intersection
 
 ### Input data
 moveStack in Movebank format
