@@ -1,9 +1,9 @@
-library('move')
-library('sp')
+library('move2')
 library('sf')
 library('ggplot2')
 #library('adehabitatLT')
 library('geosphere')
+library(dplyr)
 
 # plans for changes: 
 # 1. find crossings for each individual separately, make track into multiline (of each 2-pt segment) to have more control of when the crossing took place and have a correct timestamp and closest location (in time)
@@ -19,13 +19,28 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
   #roads <- st_read("GRIP_roads_NASAY2Y/GRIP_roads_NASAY2Y.shp")
   roads <- st_read(paste0(getAppFilePath("road_files"),"roads.shp"))
   
-  data_lsl <- lapply(move::split(data), function(x){Lines(list(Line(coordinates(x))),ID=namesIndiv(x))})
-  data_sldf <- SpatialLinesDataFrame(SpatialLines(data_lsl,proj4string = data@proj4string), data=data.frame(idData(data),"trackId"=unique(trackId(data))) ,match.ID = F)
+  original_track_id_column <- mt_track_id_column(data)
+  data <- data |> mutate(location.long = sf::st_coordinates(data)[,1],
+                         location.lat = sf::st_coordinates(data)[,2],
+                         trackId = mt_track_id(data))
+  # dat <- mt_track_data(data) |> select(c("individual_name_deployment_id", "taxon_canonical_name",
+  #                                        "timestamp_first_deployed_location", "timestamp_last_deployed_location" ,
+  #                                        "number_of_deployed_locations", "individual_local_identifier"))
+  # dat$trackId <- dat$individual_name_deployment_id
+  # data_df <-full_join(data, dat, by = "trackId")
+  
+  data_sf <- data |> 
+    group_by(trackId) |>
+    summarise(do_union = FALSE) |>
+    st_cast("LINESTRING")
+  
+  #data_lsl <- lapply(move::split(data), function(x){Lines(list(Line(coordinates(x))),ID=namesIndiv(x))})
+  #data_sldf <- SpatialLinesDataFrame(SpatialLines(data_lsl,proj4string = data@proj4string), data=data.frame(idData(data),"trackId"=unique(trackId(data))) ,match.ID = F)
   
   #data_ltraj <- as(data,"ltraj") #ltraj trows away projection info, thus dont use it!
   #data_spdf <- ltraj2sldf(data_ltraj,byid=TRUE)
   
-  data_sf <- st_as_sf(data_sldf)
+  #data_sf <- st_as_sf(data_sldf)
   #data_sf <- st_as_sf(data)
   #st_crs(data_sf) <- st_crs(roads)
   roads <- st_transform(roads,st_crs(data_sf))
@@ -86,7 +101,7 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
     names(crss_detail)[names(crss_detail)=="Y"] <- "location.lat"
     
     # add timestamp when animal was closest to each intersection
-    data.split <- move::split(data)
+    data.split <- split(data, mt_track_id(data)) 
     
     len <- dim(crss_detail)[1]
     
@@ -103,47 +118,54 @@ rFunction <- function(data,colour_name=NULL,road_files=NULL)
     {
       #print(i)
       datai <- data.split[[which(names(data.split)==crss_detail$trackId[i])]]
-      #dists2crssi <- distVincentyEllipsoid(coordinates(datai),crss_detail[i,c("location.long","location.lat")]) #takes too long
-      dists2crssi <- distGeo(coordinates(datai),crss_detail[i,c("location.long","location.lat")]) #meter
+     
+      dists2crssi <- distGeo(st_coordinates(datai),crss_detail[i,c("location.long","location.lat")]) #meter
       ixmin <- min(which(dists2crssi==min(dists2crssi)))
-      timestamp.near[i] <- as.character(timestamps(datai)[ixmin]) #timestamp of location of this track that is closest to crossing
-      loc_neari <- coordinates(datai)[ixmin,]
+      timestamp.near[i] <- as.character(mt_time(datai)[ixmin]) #timestamp of location of this track that is closest to crossing
+      loc_neari <- st_coordinates(datai)[ixmin,]
       long.near[i] <- loc_neari[1]
       lat.near[i] <- loc_neari[2]
-      sensor[i] <- as.character(sensor(datai))[1]
       
-      iddata <- idData(datai)
+      
+      iddata <- mt_track_data(datai)
+      #species[i] <- data_df |> filter(trackId == crss_detail$trackId[i]) |> select("taxon_canonical_name")
       names(iddata) <- make.names(names(iddata),allow_=FALSE)
-      if (any(names(iddata)=="individual.taxon.canonical.name")) {
-        species[i] <- iddata$individual.taxon.canonical.name[1]
-      } else if (any(names(iddata)=="taxon.canonical.name")) {
-        species[i] <- iddata$taxon.canonical.name[1]
+      if (any(names(iddata)=="taxon.canonical.name")) {
+        species[i] <- as.character(iddata$taxon.canonical.name)[1]
+      } else if (any(names(iddata)=="individual.taxon.canonical.name")) {
+        species[i] <- as.character(iddata$individual.taxon.canonical.name)[1]
       } else {
         species[i] <- NA
       }
-      
+      #print(species)
+      sensor[i] <- as.character(iddata$sensor.type.ids)[1]
       if (any(names(iddata)=="individual.local.identifier")) {
-        animalID[i] <- iddata$individual.local.identifier[1]
+        animalID[i] <- as.character(iddata$individual.local.identifier)[1]
       } else if (any(names(iddata)=="local.identifier")) {
-        animalID[i] <- iddata$local.identifier[1]
+        animalID[i] <- as.character(iddata$local.identifier)[1]
       } else {
         animalID[i] <- NA
       }
     }
     
-    crss_detail <- data.frame("roadID"=crss_detail[,1],animalID,crss_detail[,-1],timestamp.near,long.near,lat.near,species,sensor)
+    crss_detail <- data.frame("roadID"=crss_detail[,1],animalID,crss_detail[,-1],timestamp.near,long.near,lat.near,species, sensor)
     
     write.csv(crss_detail,file=paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"road_crossings_table.csv"),row.names=FALSE)
     ggsave(map, file = paste0(Sys.getenv(x = "APP_ARTIFACTS_DIR", "/tmp/"),"road_crossings_map.png"),width=8, height=8)
     
     zeit <- as.POSIXct(crss_detail$timestamp.near,tz="UTC") + c(1:len)
     o <- order(zeit)
-    roadcross <- move(x=crss_detail$location.long[o],y=crss_detail$location.lat[o],time=zeit[o], data = crss_detail[o,], proj=projection(data))
+    crss_detail$timestamp <-as.POSIXct(crss_detail$timestamp.near,tz="UTC")
+    roadcross <- mt_as_move2(crss_detail, coords = c("location.long", "location.lat"),
+                             time_column = "timestamp", crs = 4326, 
+                             track_id_column = "trackId")
+      #move(x=$location.long[o],y=crss_detail$location.lat[o],time=zeit[o], data = crss_detail[o,], proj=projection(data))
     
-    result <- moveStack(data,"road_crossing"=roadcross,forceTz="UTC")
+    # result <- mt_as_move2(data,"road_crossing"=roadcross,forceTz="UTC",
+    #                       time_column = "timestamp",  track_id_column = "trackId")
   } 
   
   
-  return(result)
+  return(data)
 }
 
