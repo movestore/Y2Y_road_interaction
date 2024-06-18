@@ -24,10 +24,10 @@
   "dependencies": {
     "R": [
       {
-        "name": "move"
+        "name": "move2"
       },
 	  {
-        "name": "sp"
+        "name": "dplyr"
       },
 	  	  {
         "name": "sf"
@@ -74,6 +74,16 @@
       "orcid": "0000-0002-3357-8533",
       "affiliation": "Max-Planck-Institute of Animal Behavior",
       "affiliationRor": "https://ror.org/026stee22"
+    },
+    {
+      "firstName": "Nilanjan",
+      "middleInitials": null,
+      "lastName": "Chatterjee",
+      "email": "nchatter@umn.edu",
+      "roles": ["author"],
+      "orcid": "0000-0002-7932-0191",
+      "affiliation": "Senckenberg Biodiversität und Klima-Forschungszentrum",
+      "affiliationRor": ""
     }
   ],
   "documentation": {
