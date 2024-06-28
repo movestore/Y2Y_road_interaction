@@ -1,77 +1,92 @@
 {
-  "version": "1.2",
   "settings": [
-    {
-      "id": "sdk",
-      "name": "The name of the MoveApps SDK",
-      "description": "Showcase requesting a string input from the users of your app.",
-      "defaultValue": "MoveApps SDK",
+      {
+      "id": "colour_name",
+      "name": "Column name for street colouring",
+      "description": "Insert the column name of the input roads data set that you want to use for colouring the roads in the map of intersections.",
+      "defaultValue": "GP_RTP",
       "type": "STRING"
     },
+	{
+      "id": "road_files",
+      "name": "Road files",
+      "description": "You can upload local files for running the road intersection analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! There is a current size limit of 1 GB for the file set. The App requires the following files, named exactly as given: 1. `roads.cpg`, 2. `roads.dbf`, 3. `roads.prj`, 4. `roads.shp`, 5. `roads.shx`. Note that fallback road files are provided, but they span only the Yukon to Yellowstone Region (Y2Y).",
+      "type": "LOCAL_FILE"
+    }
+  ],
+  "providedAppFiles": [
     {
-      "id": "year",
-      "name": "The year",
-      "description": "Insert description for the year setting setting",
-      "defaultValue": 2022,
-      "type": "INTEGER"
-    },
-    {
-      "id": "auxiliary-file-a",
-      "name": "Personalization",
-      "description": "You can personalize the app by providing a file",
-      "type": "USER_FILE"
+
+      "settingId": "road_files",
+      "from": "provided-app-files/road_files/"
     }
   ],
   "dependencies": {
     "R": [
       {
-        "name": "lubridate"
-      },
-      {
         "name": "move2"
+      },
+	  {
+        "name": "dplyr"
+      },
+	  	  {
+        "name": "sf"
+      },
+	  	  {
+        "name": "ggplot2"
+      },
+	  	  {
+        "name": "geosphere"
       }
     ]
   },
-  "providedAppFiles": [
-    {
-      "settingId": "auxiliary-file-a",
-      "from": "data/auxiliary/user-files/provided-app-files/auxiliary-file-a/sample.txt"
-    }
-  ],
+  "createsArtifacts": true,
   "license": {
     "key": "MIT"
   },
   "language": "eng",
   "keywords": [
-    "example",
-    "template"
+    "road intersection",
+    "street intersection",
+    "Yukon 2 Yellowstone",
+	"Y2Y"
   ],
   "people": [
     {
-      "firstName": "Charles",
+     "firstName": "Andrea",
       "middleInitials": null,
-      "lastName": "Darwin",
-      "email": "creator@example.com",
+      "lastName": "Kölzsch",
+      "email": "akoelzsch@ab.mpg.de",
       "roles": [
         "author",
         "creator"
       ],
-      "orcid": null,
-      "affiliation": null,
-      "affiliationRor": null
+      "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    },
+	{
+      "firstName": "Anne",
+      "middleInitials": "K",
+      "lastName": "Scharf",
+      "email": "ascharf@ab.mpg.de",
+      "roles": ["author"],
+      "orcid": "0000-0002-3357-8533",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    },
+    {
+      "firstName": "Nilanjan",
+      "middleInitials": null,
+      "lastName": "Chatterjee",
+      "email": "nchatter@umn.edu",
+      "roles": ["author"],
+      "orcid": "0000-0002-7932-0191",
+      "affiliation": "Senckenberg Biodiversität und Klima-Forschungszentrum",
+      "affiliationRor": ""
     }
   ],
-  "funding": [
-    {
-      "name": "funder name",
-      "comment": "grant for App"
-    }
-  ],
-  "references": [
-    {
-      "type": "IsDescribedBy",
-      "note": "Darwin, C. 1900. The creation. Journal XY. 1-2",
-      "url": "https://anylink.xyz"
-    }
-  ]
+  "documentation": {
+    "url": "https://github.com/movestore/Y2Y_road_interaction/blob/main/README.md"
+  }
 }
