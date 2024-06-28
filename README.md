@@ -20,11 +20,31 @@ Calculations assume that the animal travels at a consistent speed in a straight 
 The GRIP documentation explains that the dataset is for 'global environmental and biodiversity modelling projects. The dataset is not suitable for navigation.' 
 
 #### Intersection attributes 
-The following attributes describing road intesections are added to the output dataset and summarized in the output file road_crossings_table.csv. See details in Table `GRIP4_AttributeDescription.xlsx` at [https://zenodo.org/record/6420961#.Ymft39PP2Um](https://zenodo.org/record/6420961#.Ymft39PP2Um) and the related [publication](https://doi.org/10.1088/1748-9326/aabd42).
+The following attributes describing road intesections are added to the output dataset and summarized in the output file road_crossings_table.csv.
+
+One group of attributes comes from your tracking data (those that are included in the output .rds file and passed on to subsequent Apps).
+
+A second group of attributes is specific to the road intersection analysis regardless of input data, including
+
+`location.long`: longitude of intersection location
+
+`location.lat`: latitude of intersection location
+
+`timestamp.near`: timestamp of closest location of the same animal to the intersection (with random seconds added for uniqueness of timestamp)
+
+`long.near`: longitude of closest location of the same animal to the intersection
+
+`lat.near`: latitude of closest location of the same animal to the intersection
+
+`species`: species of animal of the intersection
+
+`sensor`: sensor used to collect locations of animal of the intersection
 
 `roadID`: random ID for road
 
 `animalID`: individual.local.identifier of the animal crossing the road
+
+A third group of attributes comes from the roads data source used in the analysis. If you use the default GRIP dataset, this will include the attributes listed below. See details in Table `GRIP4_AttributeDescription.xlsx` at [https://zenodo.org/record/6420961#.Ymft39PP2Um](https://zenodo.org/record/6420961#.Ymft39PP2Um) and the related [publication](https://doi.org/10.1088/1748-9326/aabd42).
 
 `GP_RTP`: road type (1 = highways, 2 = primary roads, 3 = secondary roads, 4 = tertiary roads, 5 = local roads, 0 = unspecified)
 
@@ -46,28 +66,14 @@ The following attributes describing road intesections are added to the output da
 
 `gp_gripreg`: aggregated region for the GLOBIO website downloads
 
-`location.long`: longitude of intersection location
-
-`location.lat`: latitude of intersection location
-
-`timestamp.near`: timestamp of closest location of the same animal to the intersection (with random seconds added for uniqueness of timestamp)
-
-`long.near`: longitude of closest location of the same animal to the intersection
-
-`lat.near`: latitude of closest location of the same animal to the intersection
-
-`species`: species of animal of the intersection
-
-`sensor`: sensor used to collect locations of animal of the intersection
-
 ### Input data
-moveStack in Movebank format
+move2 location object
 
 ### Output data
-moveStack in Movebank format
+move2 location object
 
 ### Artefacts
-`road_crossings_table.csv`: Overview of the extracted intersections with animalID, roadID, the closest location estimate the animal and its timestamp, and road properties (see above).
+`road_crossings_table.csv`: Overview of the extracted intersections with animalID, roadID, the closest location estimate, the animal and its timestamp, and road properties (see above).
  
 `road_crossings_map.png`: Map of roads (blue gradient) of the tracking area, with tracks shown as lines (dark red) and intersections as points (orange). Roads will be colored based on the setting "Column name for street colouring". If no value is provided, the default `GP_RTP`, displayed as "Road property", will show darker colors to indicate more major roads (see details above).
 
@@ -75,6 +81,9 @@ moveStack in Movebank format
 **Column name for street colouring (`colour_name`):** Variable of the street data set indicating colouring of roads in output map. Defaults to "GP_RTP" which is road type in the fallback GRIP roads data set.
 
 **Road files (`road_files`):** Metadata allowing the local upload of a roads shapefile in WGS 84 that overlaps with the handled tracking data set.
+
+### Most common errors
+*Please describe shortly what most common errors of the App can be, how they occur and best ways of solving them.*
 
 ### Null or error handling:
 **Setting `colour_name`:** If the selected column name of the road data set does not exist, all roads are coloured in the same colour `blue`. A warning is given.

@@ -1,0 +1,82 @@
+{
+  "settings": [
+      {
+      "id": "colour_name",
+      "name": "Column name for street colouring",
+      "description": "Insert the column name of the input roads data set that you want to use for colouring the roads in the map of intersections.",
+      "defaultValue": "GP_RTP",
+      "type": "STRING"
+    },
+	{
+      "id": "road_files",
+      "name": "Road files",
+      "description": "You can upload local files for running the road intersection analysis. Make sure that they overlap with the tracking data set and are in WGS 84 projection! There is a current size limit of 1 GB for the file set. The App requires the following files, named exactly as given: 1. `roads.cpg`, 2. `roads.dbf`, 3. `roads.prj`, 4. `roads.shp`, 5. `roads.shx`. Note that fallback road files are provided, but they span only the Yukon to Yellowstone Region (Y2Y).",
+      "type": "LOCAL_FILE"
+    }
+  ],
+  "providedAppFiles": [
+    {
+
+      "settingId": "road_files",
+      "from": "provided-app-files/road_files/"
+    }
+  ],
+  "dependencies": {
+    "R": [
+      {
+        "name": "move"
+      },
+	  {
+        "name": "sp"
+      },
+	  	  {
+        "name": "sf"
+      },
+	  	  {
+        "name": "ggplot2"
+      },
+	  	  {
+        "name": "geosphere"
+      }
+    ]
+  },
+  "createsArtifacts": true,
+  "license": {
+    "key": "MIT"
+  },
+  "language": "eng",
+  "keywords": [
+    "road intersection",
+    "street intersection",
+    "Yukon 2 Yellowstone",
+	"Y2Y"
+  ],
+  "people": [
+    {
+     "firstName": "Andrea",
+      "middleInitials": null,
+      "lastName": "Kölzsch",
+      "email": "akoelzsch@ab.mpg.de",
+      "roles": [
+        "author",
+        "creator"
+      ],
+      "orcid": "0000-0003-0193-1563",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    },
+	{
+      "firstName": "Anne",
+      "middleInitials": "K",
+      "lastName": "Scharf",
+      "email": "ascharf@ab.mpg.de",
+      "roles": ["author"],
+      "orcid": "0000-0002-3357-8533",
+      "affiliation": "Max-Planck-Institute of Animal Behavior",
+      "affiliationRor": "https://ror.org/026stee22"
+    }
+  ],
+  "documentation": {
+    "url": "https://github.com/movestore/Y2Y_road_interaction/blob/main/README.md"
+  }
+}
